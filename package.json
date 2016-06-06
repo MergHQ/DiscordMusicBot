@@ -1,0 +1,11 @@
+{
+  "name": "cancerbot",
+  "version": "1.0.0",
+  "description": "Bot that plays music and whatnot",
+  "main": "src/script.js",
+  "scripts": {
+    "start": "node src/script.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
