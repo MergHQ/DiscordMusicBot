@@ -1,18 +1,18 @@
+// Global object
+GLOBAL.App = {};
+
 var Client = require('./Client.js');
 var CommandManager = require('./CommandManager.js');
 var sq = require('./songrequests/SongQueue.js');
 
-var botClient = null;
-var cm = null;
-var songQue = null;
 require('fs').readFile('creds', 'utf8', function (err, data) {
-   botClient = new Client({
+  App.botClient = new Client({
       autorun: true,
       email: data.split('/')[0],
       password: data.split('/')[1],
   });
-  cm = new CommandManager(botClient);
-  songQue = new sq(botClient.getDiscordClient());
+  App.commandManager = new CommandManager();
+  App.songQue = new sq();
   registerCommands();
 });
 
@@ -24,12 +24,14 @@ process.on('uncaughtException', function(err) {
 //--------------------------------------
 
 function registerCommands() {
+  var cm = App.commandManager;
+  
   cm.registerCommand('!kappa', function(payload) {
     return "Kappa "+payload.nick;
   });
 
   cm.registerCommand('!serverlist', function(payload) {
-    var l = botClient.getDiscordClient().servers;
+    var l = App.botClient.getDiscordClient().servers;
     var res = '';
     for(var i in l)
       res += i + ' ';
@@ -46,8 +48,8 @@ function registerCommands() {
   });
 
   cm.registerCommand('!summon', function(payload) {
-    var vChannelID = botClient.getDiscordClient().servers['172356325689262080'].members[payload.uID].voice_channel_id;
-      botClient.getDiscordClient().joinVoiceChannel(vChannelID, function(err) {
+    var vChannelID = App.botClient.getDiscordClient().servers['172356325689262080'].members[payload.uID].voice_channel_id;
+      App.botClient.getDiscordClient().joinVoiceChannel(vChannelID, function(err) {
         return err;
       });
 
@@ -55,12 +57,12 @@ function registerCommands() {
   });
 
   cm.registerCommand('!skip', function(payload) {
-    songQue.skip();
+    App.songQue.skip();
   });
 
   cm.registerCommand('!reqlist', function(payload) {
     if(songQue !== null) {
-      var q = songQue.getQueue();
+      var q = App.songQue.getQueue();
       var resStr = '';
       for(var i = 0; i < q.length; i++) {
         resStr += ' ' + q[i].title; 
@@ -70,9 +72,9 @@ function registerCommands() {
   });
 
   cm.registerCommand('!play', function(payload) {
-    var vChannelID = botClient.getDiscordClient().servers['172356325689262080'].members[payload.uID].voice_channel_id;
+    var vChannelID = App.botClient.getDiscordClient().servers['172356325689262080'].members[payload.uID].voice_channel_id;
     try {
-      songQue.addToQueue(vChannelID, payload.mess.split(' ')[1]);
+      App.songQue.addToQueue(vChannelID, payload.mess.split(' ')[1]);
       return 'youre song has been add xDDD';
     } catch(e) {
       console.log(e);

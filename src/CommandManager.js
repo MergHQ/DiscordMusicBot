@@ -1,11 +1,11 @@
-function CommandManager(botClient) {
+function CommandManager() {
   var commands = {};
 
   this.registerCommand = function(keyword, callback) {
     commands[keyword] = callback;
   };
 
-  botClient.addCommandListener(function(user, userID, channelID, message, rawEvent) {
+  App.botClient.addCommandListener(function(user, userID, channelID, message, rawEvent) {
     var response = "";
     try {
       var parsedMessage = message.split(' ');
@@ -22,7 +22,7 @@ function CommandManager(botClient) {
       response = e;
     }
     if(response !== undefined)
-      botClient.sendMessage(channelID, response);
+      App.botClient.sendMessage(channelID, response);
   });
 }
 

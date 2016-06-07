@@ -1,10 +1,11 @@
-module.exports = function(cli) {
+module.exports = function() {
     var Player = require('./Player.js');
     var ytdl = require('ytdl-core')
     var messageListeners = [];
     var queue = [];
     var currentPlayingSong = null;
     var time = 5;
+    var cli = App.botClient.getDiscordClient();
     
     this.onMessage = function(callback) {
         messageListeners.push(callback);
@@ -32,6 +33,7 @@ module.exports = function(cli) {
     
     function endSong() {
         time = 0;
+        cli.setPresence({game:'Nothing!'});
         if(currentPlayingSong !== null)
             currentPlayingSong.release();
         currentPlayingSong = null;
