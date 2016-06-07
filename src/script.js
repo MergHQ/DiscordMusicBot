@@ -2,7 +2,6 @@ var Client = require('./Client.js');
 var CommandManager = require('./CommandManager.js');
 var sq = require('./songrequests/SongQueue.js');
 
-var songQue = new sq();
 var botClient = null;
 require('fs').readFile('creds', 'utf8', function (err, data) {
    botClient = new Client({
@@ -12,6 +11,7 @@ require('fs').readFile('creds', 'utf8', function (err, data) {
   });
 });
 var cm = new CommandManager(botClient);
+var songQue = new sq(botClient.getDiscordClient());
 
 // I'm lazy
 process.on('uncaughtException', function(err) {
@@ -54,10 +54,21 @@ cm.registerCommand('!skip', function(payload) {
   songQue.skip();
 });
 
+cm.registerCommand('!reqlist', function(payload) {
+  if(songQue !== null) {
+    var q = songQue.getQueue();
+    var resStr = '';
+    for(var i = 0; i < q.length; i++) {
+      resStr += ' ' + q[i].title; 
+    }
+    return resStr;
+  }
+});
+
 cm.registerCommand('!play', function(payload) {
   var vChannelID = botClient.getDiscordClient().servers['172356325689262080'].members[payload.uID].voice_channel_id;
   try {
-    songQue.addToQueue(botClient.getDiscordClient(), vChannelID, payload.mess.split(' ')[1]);
+    songQue.addToQueue(vChannelID, payload.mess.split(' ')[1]);
     return 'youre song has been add xDDD';
   } catch(e) {
     console.log(e);

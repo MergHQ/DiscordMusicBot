@@ -1,5 +1,6 @@
-module.exports = function() {
+module.exports = function(cli) {
     var Player = require('./Player.js');
+    var ytdl = require('ytdl-core')
     var messageListeners = [];
     var queue = [];
     var currentPlayingSong = null;
@@ -14,14 +15,20 @@ module.exports = function() {
             messageListeners[i](content);
     }
     
-    this.addToQueue = function(cli, chanID, url) {
-        queue.push({client: cli, channelID: chanID, url: url});
+    this.addToQueue = function(chanID, url) {
+        ytdl.getInfo(url, {}, function(err, data) {
+            queue.push({title: data.title, channelID: chanID, url: url}); 
+        });
     };
     
     this.skip = function() {
         if(currentPlayingSong !== null)
             endSong();
     };
+    
+    this.getQueue = function() {
+        return queue;
+    }
     
     function endSong() {
         time = 0;
@@ -32,7 +39,9 @@ module.exports = function() {
     
     function play(obj) {
         try {
-            currentPlayingSong = new Player(obj.client, obj.channelID, obj.url);
+            // Change title
+            cli.setPresence({game:obj.title});
+            currentPlayingSong = new Player(cli, obj.channelID, obj.url);
             currentPlayingSong.setOnEnd(endSong);
         } catch(e) { console.log(e); }
     }

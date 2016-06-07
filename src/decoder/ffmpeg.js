@@ -3,7 +3,12 @@ module.exports = function() {
     
     this.createDecoder = function(stream) {
         this.stream = stream;
-        this.process = child_process.spawn('C:/ffmpeg/bin/ffmpeg.exe', [
+        var command = '';
+        if(process.platform === 'linux')
+            command = '/home/tint/Discord/src/decoder/ffmpeg';
+        else
+            command = 'C:/ffmpeg/bin/ffmpeg.exe';
+        this.process = child_process.spawn(command, [
             "-f", "s16le",
             "-ar", 48000,
             "-ac", 2,
