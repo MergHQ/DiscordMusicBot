@@ -43,7 +43,6 @@ function main(discordClient, vChannelID, url) {
 	}
 	
 	this.release = function() {
-		setPresence({game:'Nothing!'});
 		ytdlStream.end();
 		if(ytdlStream.destroy) ytdlStream.destroy();			
 		ffmpeg.destroy();
