@@ -17,11 +17,6 @@ function main(discordClient, vChannelID, url) {
 		}, quality: 'lowest'});
 	} catch(e) { console.log(e); }
 	
-	// Update title
-	ytdlStream.on('info', function(data) {
-		discordClient.setPresence({game:data.title});
-	});
-	
 	var ffmpeg = null;
 	ytdlStream.once('readable', function() {
 		ffmpeg = new FFmpeg();
