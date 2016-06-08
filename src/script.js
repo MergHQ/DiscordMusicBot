@@ -1,15 +1,16 @@
 // Global object
-GLOBAL.App = {};
+GLOBAL.App = new Object;
 
 var Client = require('./Client.js');
 var CommandManager = require('./CommandManager.js');
 var sq = require('./songrequests/SongQueue.js');
 
 require('fs').readFile('creds', 'utf8', function (err, data) {
+  App.credentials = data.split('/');
   App.botClient = new Client({
       autorun: true,
-      email: data.split('/')[0],
-      password: data.split('/')[1],
+      email: App.credentials[0],
+      password: App.credentials[1],
   });
   App.commandManager = new CommandManager();
   App.songQue = new sq();
@@ -65,7 +66,7 @@ function registerCommands() {
       var q = App.songQue.getQueue();
       var resStr = '';
       for(var i = 0; i < q.length; i++) {
-        resStr += ' ' + q[i].title; 
+        resStr += ' | ' + q[i].title; 
       }
       return resStr;
     }

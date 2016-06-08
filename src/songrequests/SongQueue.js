@@ -10,16 +10,14 @@ module.exports = function() {
     this.onMessage = function(callback) {
         messageListeners.push(callback);
     };
-    
-    function sendMessage(content) {
-        for(var i = 0; i < messageListeners.length; i++)
-            messageListeners[i](content);
-    }
-    
+
     this.addToQueue = function(chanID, url) {
-        ytdl.getInfo(url, {}, function(err, data) {
-            queue.push({title: data.title, channelID: chanID, url: url}); 
-        });
+        if(url.indexOf('playlist') != -1) {
+            parsePlaylist(url, chanID);
+            return;
+        }
+        
+        queue.push({title: data.title, channelID: chanID, url: url}); 
     };
     
     this.skip = function() {
@@ -29,6 +27,36 @@ module.exports = function() {
     
     this.getQueue = function() {
         return queue;
+    };
+    
+    function parsePlaylist(playlistUrl, chanID) {
+        var needle = require('needle');
+        
+        // you can somehow use needle to pass this object instead of having that long-ass url down there.
+        var options = {
+          part: 'contentDetails',
+          playlistId: playlistUrl.split('=')[1],
+          maxResults: 20,
+          key: App.credentials[2]  
+        };
+        
+        var reqUrl = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId='+options.playlistId+'&maxResults=20&key='+options.key;
+        needle.get(reqUrl, function(err, res) {
+            if(!err) {
+                var obj = res.body;
+                for(var i = 0; i < obj.items.length; i++) {
+                    var currentItem = obj.items[i];
+                    var url = 'https://www.youtube.com/watch?v='+currentItem.snippet.resourceId.videoId;
+                    queue.push({title: currentItem.snippet.title, channelID: chanID, url: url}); 
+                }
+            }
+        });
+        
+    }
+
+    function sendMessage(content) {
+        for(var i = 0; i < messageListeners.length; i++)
+            messageListeners[i](content);
     }
     
     function endSong() {
