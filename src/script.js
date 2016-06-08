@@ -61,7 +61,7 @@ function registerCommands() {
   });
 
   cm.registerCommand('!reqlist', function(payload) {
-    if(songQue !== null) {
+    if(App.songQue !== null) {
       var q = App.songQue.getQueue();
       var resStr = '';
       for(var i = 0; i < q.length; i++) {
