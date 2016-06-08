@@ -17,7 +17,9 @@ module.exports = function() {
             return;
         }
         
-        queue.push({title: data.title, channelID: chanID, url: url}); 
+        ytdl.getInfo(url, {}, function(err, data) {
+            queue.push({title: data.title, channelID: chanID, url: url});
+        });
     };
     
     this.skip = function() {
