@@ -1,5 +1,5 @@
 // Global object
-GLOBAL.App = new Object;
+GLOBAL.App = {};
 
 var Client = require('./Client.js');
 var CommandManager = require('./CommandManager.js');

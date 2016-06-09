@@ -1,4 +1,4 @@
-var DiscordClient = require('./lib/index.js');
+var DiscordClient = require('discord.io');
 function Client(credentials) {
   var cli = null;
   var messageListeners = [];

@@ -1,6 +1,6 @@
 module.exports = function() {
     var Player = require('./Player.js');
-    var ytdl = require('ytdl-core')
+    var ytdl = require('ytdl-core');
     var messageListeners = [];
     var queue = [];
     var currentPlayingSong = null;

@@ -12,20 +12,20 @@ module.exports = function() {
             "-f", "s16le",
             "-ar", 48000,
             "-ac", 2,
-            "-af", "volume=1",
+            "-af", "volume=0.1",
             "pipe:1",
             "-i", "-"
         ]);
         stream.pipe(this.process.stdin);
         return this.process.stdout;
-    }
+    };
     
     // Destroying this shit is an absolute pain.
     this.destroy = function() {
         console.log('killing ffmpeg child process...');
         try{
-            if(this.process != null) {
-                if(this.stream != null)
+            if(this.process !== null) {
+                if(this.stream !== null)
                     this.stream.unpipe(this.process.stdin);
                     
             this.process.stdin.pause();
@@ -36,5 +36,5 @@ module.exports = function() {
         } catch(e) {
             console.error(e);
         }
-    }
-}
+    };
+};
