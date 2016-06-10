@@ -52,8 +52,7 @@ module.exports = function() {
                     queue.push({title: currentItem.snippet.title, channelID: chanID, url: url}); 
                 }
             }
-        });
-        
+        }); 
     }
 
     function sendMessage(content) {

@@ -13,6 +13,10 @@ function Client(credentials) {
         message: message
     });
   };
+  
+  this.getServerObject = function(id) {
+    return cli.servers[id];
+  }
 
   this.getDiscordClient = function() {
     return cli;

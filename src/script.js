@@ -53,7 +53,7 @@ function registerCommands() {
   });
 
   cm.registerCommand('!summon', function(payload) {
-    var vChannelID = App.botClient.getDiscordClient().servers['172356325689262080'].members[payload.uID].voice_channel_id;
+    var vChannelID = App.botClient.getDiscordClient().servers['182171520578224128 '].members[payload.uID].voice_channel_id;
     App.botClient.getDiscordClient().joinVoiceChannel(vChannelID, function(err) {
       return err;
     });
@@ -77,13 +77,15 @@ function registerCommands() {
   });
 
   cm.registerCommand('!play', function(payload) {
-    var userVoiceChannel = App.botClient.getDiscordClient().servers['172356325689262080']
+    if(App.botClient.getServerObject('172356325689262080').channels[payload.chanID].name !== 'cancerbot_requests') return;
+    
+    var userVoiceChannel = App.botClient.getServerObject('172356325689262080')
         .members[payload.uID]
         .voice_channel_id;
-    var botVoiceChannel = App.botClient.getDiscordClient().servers['172356325689262080']
+    var botVoiceChannel = App.botClient.getServerObject('172356325689262080')
         .members[App.botClient.getDiscordClient().id]
         .voice_channel_id;
-        
+            
     if(userVoiceChannel !== botVoiceChannel && userVoiceChannel !== null && botVoiceChannel !== null)
       App.commandManager.execCommand('!summon', payload);
     
