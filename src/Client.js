@@ -1,13 +1,8 @@
 var DiscordClient = require('discord.io');
 function Client(credentials) {
-  var cli = null;
+  var cli = new DiscordClient(credentials);
   var messageListeners = [];
-  connect();
-
-  function connect() {
-    cli = new DiscordClient(credentials);
-  }
-
+  
   this.addCommandListener = function(func) {
     messageListeners.push(func);
   };
@@ -38,7 +33,7 @@ function Client(credentials) {
 
   cli.on('disconnected', function() {
     console.log("Disconnected, reconnecting...");
-    connect(); // Reconnect on disconnection
+    cli.connect(); // Reconnect on disconnection
   });
 }
 
