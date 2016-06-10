@@ -19,7 +19,7 @@ require('fs').readFile('creds', 'utf8', function (err, data) {
 
 // I'm lazy
 process.on('uncaughtException', function(err) {
-    console.error('\033[31m Caught exception: ' + err + '\033[91m');
+    console.error('Caught exception: ' + err);
 });
 
 process.on('exit', function() {
