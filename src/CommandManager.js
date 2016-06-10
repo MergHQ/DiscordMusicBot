@@ -4,6 +4,10 @@ function CommandManager() {
   this.registerCommand = function(keyword, callback) {
     commands[keyword] = callback;
   };
+  
+  this.execCommand = function(keyword, payload) {
+    commands[keyword](payload);
+  };
 
   App.botClient.addCommandListener(function(user, userID, channelID, message, rawEvent) {
     var response = "";

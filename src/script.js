@@ -22,6 +22,10 @@ process.on('uncaughtException', function(err) {
     console.error('\033[31m Caught exception: ' + err + '\033[91m');
 });
 
+process.on('exit', function() {
+  App.botClient.getDiscordClient().disconnect();
+});
+
 //--------------------------------------
 
 function registerCommands() {
@@ -50,9 +54,9 @@ function registerCommands() {
 
   cm.registerCommand('!summon', function(payload) {
     var vChannelID = App.botClient.getDiscordClient().servers['172356325689262080'].members[payload.uID].voice_channel_id;
-      App.botClient.getDiscordClient().joinVoiceChannel(vChannelID, function(err) {
-        return err;
-      });
+    App.botClient.getDiscordClient().joinVoiceChannel(vChannelID, function(err) {
+      return err;
+    });
 
       return "Joined "+vChannelID;
   });
@@ -73,10 +77,19 @@ function registerCommands() {
   });
 
   cm.registerCommand('!play', function(payload) {
-    var vChannelID = App.botClient.getDiscordClient().servers['172356325689262080'].members[payload.uID].voice_channel_id;
+    var userVoiceChannel = App.botClient.getDiscordClient().servers['172356325689262080']
+        .members[payload.uID]
+        .voice_channel_id;
+    var botVoiceChannel = App.botClient.getDiscordClient().servers['172356325689262080']
+        .members[App.botClient.getDiscordClient().id]
+        .voice_channel_id;
+        
+    if(userVoiceChannel !== botVoiceChannel && userVoiceChannel !== null && botVoiceChannel !== null)
+      App.commandManager.execCommand('!summon', payload);
+    
     try {
-      App.songQue.addToQueue(vChannelID, payload.mess.split(' ')[1]);
-      return 'youre song has been add xDDD';
+      App.songQue.addToQueue(userVoiceChannel, payload.mess.split(' ')[1]);
+      return 'youre song has been add xDDD (' + App.songQue.getQueue().length + ')';
     } catch(e) {
       console.log(e);
     }
