@@ -53,12 +53,17 @@ function registerCommands() {
   });
 
   cm.registerCommand('!summon', function(payload) {
-    var vChannelID = App.botClient.getDiscordClient().servers['182171520578224128 '].members[payload.uID].voice_channel_id;
+    var vChannelID = App.botClient.getServerObject('172356325689262080').members[payload.uID].voice_channel_id;
     App.botClient.getDiscordClient().joinVoiceChannel(vChannelID, function(err) {
       return err;
     });
 
       return "Joined "+vChannelID;
+  });
+  
+  cm.registerCommand('!server', function(payload) {
+    console.log(App.botClient.getServerObject('172356325689262080'));
+    return App.botClient.getServerObject('172356325689262080');
   });
 
   cm.registerCommand('!skip', function(payload) {
@@ -91,7 +96,7 @@ function registerCommands() {
     
     try {
       App.songQue.addToQueue(userVoiceChannel, payload.mess.split(' ')[1]);
-      return 'youre song has been add xDDD (' + App.songQue.getQueue().length + ')';
+      return 'youre song has been add xDDD (' + App.songQue.getQueue().length + ') ' + JSON.stringify(payload);
     } catch(e) {
       console.log(e);
     }
