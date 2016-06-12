@@ -96,7 +96,7 @@ function registerCommands() {
     
     try {
       App.songQue.addToQueue(userVoiceChannel, payload.mess.split(' ')[1]);
-      return 'youre song has been add xDDD (' + App.songQue.getQueue().length + ') ' + JSON.stringify(payload);
+      return 'youre song has been add xDDD (' + App.songQue.getQueue().length + ')';
     } catch(e) {
       console.log(e);
     }
