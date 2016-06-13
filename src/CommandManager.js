@@ -6,7 +6,7 @@ function CommandManager() {
   };
   
   this.execCommand = function(keyword, payload) {
-    commands[keyword](payload);
+    App.botClient.sendMessage(payload.chanID, commands[keyword](payload));
   };
 
   App.botClient.addCommandListener(function(user, userID, channelID, message, rawEvent) {

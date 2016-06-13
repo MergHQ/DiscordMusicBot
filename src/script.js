@@ -43,15 +43,6 @@ function registerCommands() {
     return res;
   });
 
-  cm.registerCommand('!randomnum', function(payload) {
-    try {
-      var obj = JSON.parse(payload.mess.split(' ')[1]);
-      return Math.floor(obj.begin + (Math.random() * (obj.end-obj.begin)));
-    } catch(e) {
-      return e;
-    }
-  });
-
   cm.registerCommand('!summon', function(payload) {
     var vChannelID = App.botClient.getServerObject('172356325689262080').members[payload.uID].voice_channel_id;
     App.botClient.getDiscordClient().joinVoiceChannel(vChannelID, function(err) {
@@ -59,6 +50,28 @@ function registerCommands() {
     });
 
       return "Joined "+vChannelID;
+  });
+  
+  cm.registerCommand('!randomvid', function(payload) {
+    var needle = require('needle');
+    var id = '';
+    for(var i = 0; i < 3; i++) {
+      if(Math.random() >= 0.33)
+        id += String.fromCharCode(100 + Math.floor(Math.random() * 25));
+      else if(Math.random() >= 0.66)
+        id += String.fromCharCode(65 + Math.floor(Math.random() * 25));
+      else
+        id += Math.floor(Math.random() * 9);
+    }
+        
+    var reqUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=v='+id+'&type=video&key='+App.credentials[2];
+    needle.get(reqUrl, function(err, res) {
+      if(!err) {
+          var item = res.body.items[Math.floor(Math.random() * res.body.items.length)];
+          payload.mess = '!play https://www.youtube.com/watch?v='+item.id.videoId;
+          App.commandManager.execCommand('!play', payload);
+      } 
+    });
   });
   
   cm.registerCommand('!server', function(payload) {

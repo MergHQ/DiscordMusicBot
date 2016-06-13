@@ -16,7 +16,7 @@ function Client(credentials) {
   
   this.getServerObject = function(id) {
     return cli.servers[id];
-  }
+  };
 
   this.getDiscordClient = function() {
     return cli;
