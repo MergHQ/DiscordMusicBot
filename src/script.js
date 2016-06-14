@@ -19,7 +19,14 @@ require('fs').readFile('creds', 'utf8', function (err, data) {
 
 // I'm lazy
 process.on('uncaughtException', function(err) {
-    console.error('Caught exception: ' + err);
+  if (err.code == 'ECONNRESET') {
+    console.log('Got an ECONNRESET! This is *probably* not an error. Stacktrace:');
+    console.log(err.stack);
+    return;
+  } 
+  
+  console.log(err);
+  console.log(err.stack);
 });
 
 process.on('exit', function() {
