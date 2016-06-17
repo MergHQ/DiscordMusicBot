@@ -14,6 +14,10 @@ function main(url) {
 		ytdlStream = ytdl(url, {filter: 'audioonly'});
 	} catch(e) { console.log(e); }
 	
+	ytdlStream.on('end', function() {
+		onEndFunc();
+	});
+	
 	// So discord.js encodes the data stream for me with ffmpeg. Sweet!
 	audioContext.playRawStream(ytdlStream, {volume: 0.1}, function(str,err) {
 		console.log(err);
