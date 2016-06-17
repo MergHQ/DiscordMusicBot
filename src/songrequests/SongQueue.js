@@ -5,20 +5,19 @@ module.exports = function() {
     var queue = [];
     var currentPlayingSong = null;
     var time = 5;
-    var cli = App.botClient.getDiscordClient();
     
     this.onMessage = function(callback) {
         messageListeners.push(callback);
     };
 
-    this.addToQueue = function(chanID, url) {
+    this.addToQueue = function(url) {
         if(url.indexOf('playlist') != -1) {
-            parsePlaylist(url, chanID);
+            parsePlaylist(url);
             return;
         }
         
         ytdl.getInfo(url, {}, function(err, data) {
-            queue.push({title: data.title, channelID: chanID, url: url});
+            queue.push({title: data.title, url: url});
         });
     };
     
@@ -31,7 +30,7 @@ module.exports = function() {
         return queue;
     };
     
-    function parsePlaylist(playlistUrl, chanID) {
+    function parsePlaylist(playlistUrl) {
         var needle = require('needle');
         
         // you can somehow use needle to pass this object instead of having that long-ass url down there.
@@ -49,7 +48,7 @@ module.exports = function() {
                 for(var i = 0; i < obj.items.length; i++) {
                     var currentItem = obj.items[i];
                     var url = 'https://www.youtube.com/watch?v='+currentItem.snippet.resourceId.videoId;
-                    queue.push({title: currentItem.snippet.title, channelID: chanID, url: url}); 
+                    queue.push({title: currentItem.snippet.title, url: url}); 
                 }
             }
         }); 
@@ -62,7 +61,7 @@ module.exports = function() {
     
     function endSong() {
         time = 0;
-        cli.setPresence({game:'Nothing!'});
+        App.botClient.setStatus('Nothing!');
         if(currentPlayingSong !== null)
             currentPlayingSong.release();
         currentPlayingSong = null;
@@ -71,8 +70,8 @@ module.exports = function() {
     function play(obj) {
         try {
             // Change title
-            cli.setPresence({game:obj.title});
-            currentPlayingSong = new Player(cli, obj.channelID, obj.url);
+            App.botClient.setStatus(obj.title);
+            currentPlayingSong = new Player(obj.url);
             currentPlayingSong.setOnEnd(endSong);
         } catch(e) { console.log(e); }
     }

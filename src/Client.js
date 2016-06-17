@@ -1,21 +1,44 @@
-var DiscordClient = require('discord.io');
+var Discord = require('discord.js');
 function Client(credentials) {
-  var cli = new DiscordClient(credentials);
+  var options = {
+    autoReconnect: true
+  };
+  var cli = new Discord.Client(options);
+  cli.loginWithToken(App.credentials[3]);
   var messageListeners = [];
   
-  this.addCommandListener = function(func) {
+  this.joinChannel = function(voiceChannel) {
+    if(voiceChannel) {
+      cli.joinVoiceChannel(voiceChannel);
+      return '';
+    } else return 'error joining channel';
+  };
+  
+  this.getAudioContext = function() {
+    return cli.voiceConnection; 
+  };
+  
+  this.addMessageListener = function(func) {
     messageListeners.push(func);
   };
 
-  this.sendMessage = function(channelID, message) {
-    cli.sendMessage({
-        to: channelID,
-        message: message
-    });
+  this.sendMessage = function(rawEvent, message) {
+    cli.sendMessage(rawEvent, message);
   };
   
-  this.getServerObject = function(id) {
-    return cli.servers[id];
+  this.getBotUserObject = function() {
+    return cli.user;
+  }
+  
+  this.getServerObject = function(name) {
+    for(var i = 0; i < cli.servers.length; i++)
+      if(cli.servers[i].name === name)
+        return cli.servers[i];
+    return null;
+  };
+  
+  this.setStatus = function(status) {
+    cli.setPlayingGame(status);
   };
 
   this.getDiscordClient = function() {
@@ -23,21 +46,20 @@ function Client(credentials) {
   };
 
   cli.on('ready', function() {
-      console.log(cli.username + " - (" + cli.id + ")");
+      console.log(cli.user.username + ' - ('+cli.user.id+')');
   });
 
-  cli.on('message', function(user, userID, channelID, message, rawEvent) {
+  cli.on('message', function(msg) {
     // Only emit commands.
-    if (message.indexOf("!") != -1) {
+    if (msg.content.indexOf("!") != -1) {
       for(var i = 0; i < messageListeners.length; i++) {
-        messageListeners[i](user, userID, channelID, message, rawEvent);
+        messageListeners[i](msg.author.username, msg.author.id, msg.channel, msg.content, msg);
       }
     }
   });
 
   cli.on('disconnected', function() {
     console.log("Disconnected, reconnecting...");
-    cli.connect(); // Reconnect on disconnection
   });
 }
 

@@ -7,11 +7,7 @@ var sq = require('./songrequests/SongQueue.js');
 
 require('fs').readFile('creds', 'utf8', function (err, data) {
   App.credentials = data.split('/');
-  App.botClient = new Client({
-      autorun: true,
-      email: App.credentials[0],
-      password: App.credentials[1],
-  });
+  App.botClient = new Client();
   App.commandManager = new CommandManager();
   App.songQue = new sq();
   registerCommands();
@@ -51,12 +47,7 @@ function registerCommands() {
   });
 
   cm.registerCommand('!summon', function(payload) {
-    var vChannelID = App.botClient.getServerObject('172356325689262080').members[payload.uID].voice_channel_id;
-    App.botClient.getDiscordClient().joinVoiceChannel(vChannelID, function(err) {
-      return err;
-    });
-
-      return "Joined "+vChannelID;
+    return App.botClient.joinChannel(payload.raw.author.voiceChannel)
   });
   
   cm.registerCommand('!randomvid', function(payload) {
@@ -82,8 +73,8 @@ function registerCommands() {
   });
   
   cm.registerCommand('!server', function(payload) {
-    console.log(App.botClient.getServerObject('172356325689262080'));
-    return App.botClient.getServerObject('172356325689262080');
+    console.log(App.botClient.getDiscordClient().servers);
+    return App.botClient.getServerObject('TINT');
   });
 
   cm.registerCommand('!skip', function(payload) {
@@ -100,22 +91,22 @@ function registerCommands() {
       return resStr;
     }
   });
+  
+  cm.registerCommand('!test', function(payload) {
+    App.botClient.getAudioContext().playFile('asd.mp3');
+  });
 
   cm.registerCommand('!play', function(payload) {
-    if(App.botClient.getServerObject('172356325689262080').channels[payload.chanID].name !== 'cancerbot_requests') return;
+    if(payload.channel.name !== 'cancerbot_requests') return;
     
-    var userVoiceChannel = App.botClient.getServerObject('172356325689262080')
-        .members[payload.uID]
-        .voice_channel_id;
-    var botVoiceChannel = App.botClient.getServerObject('172356325689262080')
-        .members[App.botClient.getDiscordClient().id]
-        .voice_channel_id;
-            
-    if(userVoiceChannel !== botVoiceChannel && userVoiceChannel !== null && botVoiceChannel !== null)
+    var userVoiceChannel = payload.raw.author.voiceChannel;
+    var botVoiceChannel = App.botClient.getBotUserObject().voiceChannel;  
+         
+    if(userVoiceChannel === null || botVoiceChannel === null || userVoiceChannel.id !== botVoiceChannel.id)
       App.commandManager.execCommand('!summon', payload);
     
     try {
-      App.songQue.addToQueue(userVoiceChannel, payload.mess.split(' ')[1]);
+      App.songQue.addToQueue(payload.mess.split(' ')[1]);
       return 'youre song has been add xDDD (' + App.songQue.getQueue().length + ')';
     } catch(e) {
       console.log(e);

@@ -1,9 +1,8 @@
 var ytdl = require('ytdl-core');
-var FFmpeg = require('../decoder/ffmpeg.js');
 
-function main(discordClient, vChannelID, url) {
+function main(url) {
 	var currentStream = null;
-	var audioContext = discordClient.getAudioContext({ channel: vChannelID, stereo: true}, handleStream);
+	var audioContext = App.botClient.getAudioContext();
 	var onEndFunc = null;
 	
 	this.setOnEnd = function(callback) {
@@ -12,41 +11,18 @@ function main(discordClient, vChannelID, url) {
 	
 	var ytdlStream = null;
 	try {
-		ytdlStream = ytdl(url, {filter: function(format) { 
-			return format.container === 'mp4'; 
-		}, quality: 'lowest'});
+		ytdlStream = ytdl(url, {filter: 'audioonly'});
 	} catch(e) { console.log(e); }
 	
-	var ffmpeg = null;
-	ytdlStream.once('readable', function() {
-		ffmpeg = new FFmpeg();
-		var strim = ffmpeg.createDecoder(ytdlStream);
-		
-		strim.on('end', function() {
-			onEndFunc();
-			ffmpeg = null;	
-		});
-		
-		strim.on('readable', function() {
-			// YEEAAH GOOD SHIT
-			if(strim !== null)
-				currentStream.send(strim);
-		});
-
-		strim.on('error', function(err) {
-			console.log('an error happened: ' + err.message);
-		});
+	// So discord.js encodes the data stream for me with ffmpeg. Sweet!
+	audioContext.playRawStream(ytdlStream, {volume: 0.1}, function(str,err) {
+		console.log(err);
 	});
 
-	function handleStream(stream) {
-		currentStream = stream;
-	}
-	
 	this.release = function() {
 		ytdlStream.end();
-		if(ytdlStream.destroy) ytdlStream.destroy();			
-		ffmpeg.destroy();
-		ffmpeg = null;
+		audioContext.stopPlaying();
+		if(ytdlStream.destroy) ytdlStream.destroy();
 	};
 }
 

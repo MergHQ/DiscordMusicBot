@@ -9,15 +9,16 @@ function CommandManager() {
     App.botClient.sendMessage(payload.chanID, commands[keyword](payload));
   };
 
-  App.botClient.addCommandListener(function(user, userID, channelID, message, rawEvent) {
+  App.botClient.addMessageListener(function(user, userID, channel, message, rawEvent) {
     var response = "";
     try {
       var parsedMessage = message.split(' ');
       var payload = {
         nick: user,
-        uID: userID,
-        chanID: channelID,
-        mess: message
+        userID: userID,
+        channel: channel,
+        mess: message,
+        raw: rawEvent
       };
       if(parsedMessage[0] in commands)
         response = commands[parsedMessage[0]](payload);
@@ -26,7 +27,7 @@ function CommandManager() {
       response = e;
     }
     if(response !== undefined)
-      App.botClient.sendMessage(channelID, response);
+      App.botClient.sendMessage(rawEvent, response);
   });
 }
 
