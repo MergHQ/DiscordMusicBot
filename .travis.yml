@@ -2,13 +2,9 @@ language: node_js
 before_script:
   - npm install -g gulp
   - npm install gulp
-  - npm install
+  - npm install jshint gulp-jshint --save-dev
   - npm install ytdl-core
   - npm install needle
 script: gulp
 node_js:
   - "6"
-  - "6.1"
-  - "5.11"
-  - "0.6"
-  - "iojs"
