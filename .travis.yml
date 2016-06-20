@@ -1,6 +1,9 @@
 language: node_js
 before_script:
   - npm install -g gulp
+  - npm install
+  - npm install ytdl-core
+  - npm install needle
 script: gulp
 node_js:
   - "6"
