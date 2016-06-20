@@ -47,7 +47,7 @@ function registerCommands() {
   });
 
   cm.registerCommand('!summon', function(payload) {
-    return App.botClient.joinChannel(payload.raw.author.voiceChannel)
+    return App.botClient.joinChannel(payload.raw.author.voiceChannel);
   });
   
   cm.registerCommand('!randomvid', function(payload) {

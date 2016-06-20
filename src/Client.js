@@ -28,7 +28,7 @@ function Client(credentials) {
   
   this.getBotUserObject = function() {
     return cli.user;
-  }
+  };
   
   this.getServerObject = function(name) {
     for(var i = 0; i < cli.servers.length; i++)
