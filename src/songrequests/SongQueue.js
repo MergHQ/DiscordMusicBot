@@ -30,6 +30,10 @@ module.exports = function() {
         return queue;
     };
     
+    this.emptyQue = function() {      
+      queue = [];
+    };
+    
     function parsePlaylist(playlistUrl) {
         var needle = require('needle');
         
@@ -79,8 +83,7 @@ module.exports = function() {
     function timer() {
         time++;
         if(time >= 5 && currentPlayingSong === null) {
-            if(queue.length === 0)
-                return;
+            if(queue.length === 0) return;
             play(queue[0]);
             queue.shift();
         }

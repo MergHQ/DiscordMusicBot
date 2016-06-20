@@ -92,6 +92,12 @@ function registerCommands() {
     }
   });
   
+  cm.registerCommand('!purgereqlist', function(payload) {
+    if(payload.raw.author.username !== 'Merg') return;
+    
+    App.songQue.emptyQue();
+  });
+  
   cm.registerCommand('!test', function(payload) {
     App.botClient.getAudioContext().playFile('asd.mp3');
   });
