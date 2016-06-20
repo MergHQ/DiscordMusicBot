@@ -80,13 +80,13 @@ function registerCommands() {
   cm.registerCommand('!skip', function(payload) {
     App.songQue.skip();
   });
-
+  
   cm.registerCommand('!reqlist', function(payload) {
     if(App.songQue !== null) {
       var q = App.songQue.getQueue();
       var resStr = '';
       for(var i = 0; i < q.length; i++) {
-        resStr += ' | ' + q[i].title; 
+        resStr += '\n' + (i+1) + ' ' + q[i].title; 
       }
       return resStr;
     }
@@ -96,10 +96,6 @@ function registerCommands() {
     if(payload.raw.author.username !== 'Merg') return;
     
     App.songQue.emptyQue();
-  });
-  
-  cm.registerCommand('!test', function(payload) {
-    App.botClient.getAudioContext().playFile('asd.mp3');
   });
 
   cm.registerCommand('!play', function(payload) {
