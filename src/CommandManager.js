@@ -1,15 +1,15 @@
 function CommandManager() {
   var commands = {};
 
-  this.registerCommand = function(keyword, callback) {
+  this.registerCommand = function (keyword, callback) {
     commands[keyword] = callback;
   };
-  
-  this.execCommand = function(keyword, payload) {
+
+  this.execCommand = function (keyword, payload) {
     App.botClient.sendMessage(payload.chanID, commands[keyword](payload));
   };
 
-  App.botClient.addMessageListener(function(user, userID, channel, message, rawEvent) {
+  App.botClient.addMessageListener(function (user, userID, channel, message, rawEvent) {
     var response = "";
     try {
       var parsedMessage = message.split(' ');
@@ -20,13 +20,13 @@ function CommandManager() {
         mess: message,
         raw: rawEvent
       };
-      if(parsedMessage[0] in commands)
+      if (parsedMessage[0] in commands)
         response = commands[parsedMessage[0]](payload);
       else return;
-    } catch(e) {
+    } catch (e) {
       response = e;
     }
-    if(response !== undefined)
+    if (response !== undefined)
       App.botClient.sendMessage(rawEvent, response);
   });
 }
