@@ -45,7 +45,7 @@ module.exports = function () {
       key: App.credentials[2]
     };
 
-    var reqUrl = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=' + options.playlistId + '&maxResults=20&key=' + options.key;
+    var reqUrl = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=' + options.playlistId + '&maxResults=50&key=' + options.key;
     needle.get(reqUrl, function (err, res) {
       if (!err) {
         var obj = res.body;

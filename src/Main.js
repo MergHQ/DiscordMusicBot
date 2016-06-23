@@ -5,6 +5,7 @@ var Client = require('./Client.js');
 var CommandManager = require('./CommandManager.js');
 var sq = require('./songrequests/SongQueue.js');
 var WQ = require('./misc/weather.js');
+var emotes = require('./misc/emotes.js');
 
 require('fs').readFile('creds', 'utf8', function (err, data) {
   App.credentials = data.split('/');
@@ -32,8 +33,9 @@ process.on('exit', function () {
 function init() {
   App.botClient = new Client();
   App.commandManager = new CommandManager();
-  App.songQue = new sq();
+  App.SongQue = new sq();
   App.Weather = new WQ();
+  App.Emotes = new emotes();
 
   var cm = App.commandManager;
 
@@ -47,6 +49,10 @@ function init() {
     for (var i in l)
       res += i + ' ';
     return res;
+  })
+
+  cm.registerCommand('!emote', function(payload) {
+    App.Emotes.do(payload);
   });
 
   cm.registerCommand('!weather', function (payload) {
@@ -85,12 +91,12 @@ function init() {
   });
 
   cm.registerCommand('!skip', function (payload) {
-    App.songQue.skip();
+    App.SongQue.skip();
   });
 
   cm.registerCommand('!reqlist', function (payload) {
-    if (App.songQue !== null) {
-      var q = App.songQue.getQueue();
+    if (App.SongQue !== null) {
+      var q = App.SongQue.getQueue();
       var resStr = '';
       for (var i = 0; i < q.length; i++) {
         resStr += '\n' + (i + 1) + ' ' + q[i].title;
@@ -102,7 +108,7 @@ function init() {
   cm.registerCommand('!purgereqlist', function (payload) {
     if (payload.raw.author.username !== 'Merg') return;
 
-    App.songQue.emptyQue();
+    App.SongQue.emptyQue();
   });
 
   cm.registerCommand('!play', function (payload) {
@@ -115,8 +121,8 @@ function init() {
       App.commandManager.execCommand('!summon', payload);
 
     try {
-      App.songQue.addToQueue(payload.mess.split(' ')[1]);
-      return 'youre song has been add xDDD (' + App.songQue.getQueue().length + ')';
+      App.SongQue.addToQueue(payload.mess.split(' ')[1]);
+      return 'youre song has been add xDDD (' + App.SongQue.getQueue().length + ')';
     } catch (e) {
       console.log(e);
     }

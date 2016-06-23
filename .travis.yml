@@ -4,6 +4,7 @@ before_script:
   - npm install gulp
   - npm install jshint gulp-jshint --save-dev
   - npm install --save-dev gulp-watch
+  - npm install map-stream
   - npm install ytdl-core
   - npm install needle
 script: gulp
