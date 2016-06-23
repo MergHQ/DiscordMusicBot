@@ -49,7 +49,7 @@ function init() {
     for (var i in l)
       res += i + ' ';
     return res;
-  })
+  });
 
   cm.registerCommand('!emote', function(payload) {
     App.Emotes.do(payload);
