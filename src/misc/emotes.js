@@ -23,7 +23,7 @@ module.exports = function () {
     try {
       var code = payload.parameter;
       if (emotes[code] === null) return;
-      App.botClient.sendMessage(payload.raw, emotes[code]);
+      App.botClient.sendFile(payload.raw, emotes[code]);
     } catch (e) {
       App.botClient.sendMessage(payload.raw, 'Error parsing');
     }

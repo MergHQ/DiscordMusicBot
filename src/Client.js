@@ -26,6 +26,10 @@ function Client(credentials) {
     cli.sendMessage(rawEvent, '```' + message + '```');
   };
 
+  this.sendFile = function (rawEvent, file) {
+    cli.sendFile(rawEvent, file);
+  };
+
   this.reply = function (rawEvent, message) {
     cli.reply(rawEvent, message);
   };
