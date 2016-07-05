@@ -7,7 +7,7 @@ function CommandManager() {
 
   this.getCommands = function () {
     return commands;
-  }
+  };
 
   this.execCommand = function (keyword, payload) {
     App.botClient.sendMessage(payload.chanID, commands[keyword].exec(payload));

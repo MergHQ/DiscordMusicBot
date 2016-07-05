@@ -41,7 +41,7 @@ module.exports = function (cm) {
     exec: function (payload) {
       return App.botClient.joinChannel(payload.raw.author.voiceChannel);
     }
-  }
+  };
 
   var randomvid = {
     keyword: '!randomvid',
@@ -138,7 +138,9 @@ module.exports = function (cm) {
     exec: function (payload) {
       if (payload.raw.author.username !== 'Merg') return;
       try {
+        /* jshint ignore:start */
         return eval(payload.parameter);
+        /* jshint ignore:end */
       } catch (e) { return e; }
     }
   };
