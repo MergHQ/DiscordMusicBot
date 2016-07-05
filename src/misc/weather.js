@@ -6,7 +6,7 @@ module.exports = function () {
 
   this.get = function (msgPayload) {
     try {
-      query(msgPayload.mess.split(' ')[1], msgPayload.raw);
+      query(msgPayload.parameter, msgPayload.raw);
     } catch (e) {
       returnMessage(msgPayload.raw, 'Could not parse city');
     }

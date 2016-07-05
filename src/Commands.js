@@ -1,0 +1,173 @@
+module.exports = function (cm) {
+  var kappa = {
+    keyword: '!kappa',
+    description: 'Le funny maymay xD',
+    exec: function (payload) {
+      return "Kappa " + payload.nick;
+    }
+  };
+
+  var serverlist = {
+    keyword: '!serverlist',
+    description: 'Shows all servers the bot is connected to',
+    exec: function (payload) {
+      var l = App.botClient.getDiscordClient().servers;
+      var res = '';
+      for (var i in l)
+        res += i + ' ';
+      return res;
+    }
+  };
+
+  var emote = {
+    keyword: '!emote',
+    description: 'Shows twitch emote',
+    exec: function (payload) {
+      App.Emotes.do(payload);
+    }
+  };
+
+  var weather = {
+    keyword: '!weather',
+    description: 'Shows weather in specified area',
+    exec: function (payload) {
+      App.Weather.get(payload);
+    }
+  };
+
+  var summon = {
+    keyword: '!summon',
+    description: 'Summons bot to the voice channel',
+    exec: function (payload) {
+      return App.botClient.joinChannel(payload.raw.author.voiceChannel);
+    }
+  }
+
+  var randomvid = {
+    keyword: '!randomvid',
+    description: 'Plays random youtube video',
+    exec: function (payload) {
+      var needle = require('needle');
+      var id = '';
+      for (var i = 0; i < 3; i++) {
+        if (Math.random() >= 0.33)
+          id += String.fromCharCode(100 + Math.floor(Math.random() * 25));
+        else if (Math.random() >= 0.66)
+          id += String.fromCharCode(65 + Math.floor(Math.random() * 25));
+        else
+          id += Math.floor(Math.random() * 9);
+      }
+
+      var reqUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=v=' + id + '&type=video&key=' + App.credentials[2];
+      needle.get(reqUrl, function (err, res) {
+        if (!err) {
+          var item = res.body.items[Math.floor(Math.random() * res.body.items.length)];
+          payload.mess = '!play https://www.youtube.com/watch?v=' + item.id.videoId;
+          App.commandManager.execCommand('!play', payload);
+        }
+      });
+    }
+  };
+
+  var server = {
+    keyword: '!server',
+    description: 'Returns current server object',
+    exec: function (payload) {
+      console.log(App.botClient.getDiscordClient().servers);
+      return App.botClient.getServerObject('TINT');
+    }
+  };
+
+  var skip = {
+    keyword: '!skip',
+    description: 'Skips playing song',
+    exec: function (payload) {
+      App.SongQue.skip();
+    }
+  };
+
+  var reqlist = {
+    keyword: '!reqlist',
+    description: 'Shows song request list',
+    exec: function (payload) {
+      if (App.SongQue !== null) {
+        var q = App.SongQue.getQueue();
+        var resStr = '';
+        for (var i = 0; i < q.length; i++) {
+          resStr += '\n' + (i + 1) + '. ' + q[i].title;
+        }
+        return resStr;
+      }
+    }
+  };
+
+  var purgereqlist = {
+    keyword: '!purgereqlist',
+    description: '(Merg-only) cleans song que',
+    exec: function (payload) {
+      if (payload.raw.author.username !== 'Merg') return;
+
+      App.SongQue.emptyQue();
+    }
+  };
+
+  var play = {
+    keyword: '!play',
+    description: 'Adds new song to queue',
+    exec: function (payload) {
+      if (payload.channel.name !== 'cancerbot_requests') return;
+
+      var userVoiceChannel = payload.raw.author.voiceChannel;
+      var botVoiceChannel = App.botClient.getBotUserObject().voiceChannel;
+
+      if (userVoiceChannel === null || botVoiceChannel === null || userVoiceChannel.id !== botVoiceChannel.id)
+        App.commandManager.execCommand('!summon', payload);
+
+      try {
+        App.SongQue.addToQueue(payload.parameter);
+        return 'youre song has been add xDDD (' + App.SongQue.getQueue().length + ')';
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  var exec = {
+    keyword: '!exec',
+    description: '(Merg-only) Executes javascript code',
+    exec: function (payload) {
+      if (payload.raw.author.username !== 'Merg') return;
+      try {
+        return eval(payload.parameter);
+      } catch (e) { return e; }
+    }
+  };
+
+  var help = {
+    keyword: '!help',
+    description: 'Lists all commands',
+    exec: function (payload) {
+      var commands = cm.getCommands();
+      var res = '\n HELP: ';
+      for (var i in commands) {
+        var val = commands[i];
+        res += '\n' + val.keyword + ' - ' + val.description + '\n';
+      }
+      return res;
+    }
+  };
+
+  cm.registerCommand(kappa);
+  cm.registerCommand(serverlist);
+  cm.registerCommand(emote);
+  cm.registerCommand(weather);
+  cm.registerCommand(summon);
+  cm.registerCommand(randomvid);
+  cm.registerCommand(server);
+  cm.registerCommand(skip);
+  cm.registerCommand(reqlist);
+  cm.registerCommand(purgereqlist);
+  cm.registerCommand(play);
+  cm.registerCommand(exec);
+  cm.registerCommand(help);
+};

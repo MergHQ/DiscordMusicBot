@@ -21,7 +21,7 @@ module.exports = function () {
 
   this.do = function (payload) {
     try {
-      var code = payload.mess.split(' ')[1];
+      var code = payload.parameter;
       if (emotes[code] === null) return;
       App.botClient.sendMessage(payload.raw, emotes[code]);
     } catch (e) {

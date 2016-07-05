@@ -19,7 +19,8 @@ function main(url) {
   });
 
   // So discord.js encodes the data stream for me with ffmpeg. Sweet!
-  audioContext.playRawStream(ytdlStream, { volume: 0.1 });
+  if(audioContext)
+    audioContext.playRawStream(ytdlStream, { volume: 0.1 }); else onEndFunc();
 
   this.release = function () {
     ytdlStream.end();
