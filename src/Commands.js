@@ -1,4 +1,5 @@
-module.exports = function (cm) {
+module.exports = function () {
+  var cm = App.commandManager;
   var kappa = {
     keyword: '!kappa',
     description: 'Le funny maymay xD',

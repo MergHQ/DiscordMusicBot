@@ -10,19 +10,21 @@ function CommandManager() {
   };
 
   this.execCommand = function (keyword, payload) {
-    App.botClient.sendMessage(payload.chanID, commands[keyword].exec(payload));
+    App.botClient.sendMessage(payload.raw, commands[keyword].exec(payload));
   };
 
   App.botClient.addMessageListener(function (user, userID, channel, message, rawEvent) {
     var response = "";
     try {
       var parsedMessage = message.split(' ');
+      var a = message.split(' ');
+      a.shift();
       var payload = {
         nick: user,
         userID: userID,
         channel: channel,
         mess: message,
-        parameter: parsedMessage[1],
+        parameter: a.join(' '),
         raw: rawEvent
       };
       if (parsedMessage[0] in commands)

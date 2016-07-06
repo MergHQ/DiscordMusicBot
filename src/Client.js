@@ -23,6 +23,7 @@ function Client(credentials) {
   };
 
   this.sendMessage = function (rawEvent, message) {
+    if(message.length === 0) return;
     cli.sendMessage(rawEvent, '```' + message + '```');
   };
 

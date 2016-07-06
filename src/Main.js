@@ -40,6 +40,6 @@ function init() {
   App.Weather = new WQ();
   App.Emotes = new emotes();
 
-  var cm = App.commandManager;
-  commands(cm);
+  // Create commands
+  commands();
 }
