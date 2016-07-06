@@ -11,8 +11,12 @@ function main(url) {
 
   var ytdlStream = null;
   try {
-    ytdlStream = ytdl(url, { filter: 'audioonly' });
+    ytdlStream = ytdl(url, {quality: 140});
   } catch (e) { console.log(e); }
+
+  ytdlStream.on('error', e => {
+    return;
+  });
 
   ytdlStream.on('end', function () {
     onEndFunc();
