@@ -173,6 +173,14 @@ module.exports = function () {
     }
   }
 
+  var d2gamerep = {
+    keyword: '!d2gamerep',
+    description: 'Shows stats of last dota 2 game.',
+    exec: function (payload) {
+      App.D2GameReports.get(payload);
+    }
+  };
+
   cm.registerCommand(kappa);
   cm.registerCommand(serverlist);
   cm.registerCommand(emote);
@@ -187,4 +195,5 @@ module.exports = function () {
   cm.registerCommand(exec);
   cm.registerCommand(help);
   cm.registerCommand(webshot);
+  cm.registerCommand(d2gamerep);
 };

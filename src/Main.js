@@ -7,6 +7,7 @@ var sq = require('./commands/songrequests/SongQueue.js');
 var WQ = require('./commands/weather.js');
 var emotes = require('./commands/emotes.js');
 var commands = require('./Commands.js');
+var d2gamerep = require('./commands/dota2gamereport.js');
 
 require('fs').readFile('creds', 'utf8', function (err, data) {
   App.credentials = JSON.parse(data);
@@ -39,6 +40,7 @@ function init() {
   App.SongQue = new sq();
   App.Weather = new WQ();
   App.Emotes = new emotes();
+  App.D2GameReports = new d2gamerep();
 
   // Create commands
   commands();
