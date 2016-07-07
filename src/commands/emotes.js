@@ -1,9 +1,9 @@
 module.exports = function () {
-  var urlTwitch = 'https://api.twitch.tv/kraken/chat/emoticons';
-  var urlBTTV = 'https://api.betterttv.net/2/emotes';
+  var bttvAPI = require('../api/bttv.js');
+  var twitchAPI = require('../api/twitch.js');
   var needle = require('needle');
   var emotes = {};
-  needle.get(urlTwitch, function (err, res) {
+  needle.get(twitchAPI.GET_emoteList, function (err, res) {
     if (err) return;
     var array = JSON.parse(res.body).emoticons;
     for (var i = 0; i < array.length; i++) {
@@ -11,11 +11,11 @@ module.exports = function () {
     }
   });
 
-  needle.get(urlBTTV, function (err, res) {
+  needle.get(bttvAPI.GET_emoteList, function (err, res) {
     if (err) return;
     var array = res.body.emotes;
     for (var i = 0; i < array.length; i++) {
-      emotes[array[i].code] = 'https://cdn.betterttv.net/emote/' + array[i].id + '/1x';
+      emotes[array[i].code] = bttvAPI.GET_emote(array[i].id);
     }
   });
 

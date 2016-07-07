@@ -14,8 +14,8 @@ function main(url) {
     ytdlStream = ytdl(url, {quality: 140});
   } catch (e) { console.log(e); }
 
-  ytdlStream.on('error', e => {
-    return;
+  ytdlStream.on('error', function(e) {
+    onEndFunc();
   });
 
   ytdlStream.on('end', function () {

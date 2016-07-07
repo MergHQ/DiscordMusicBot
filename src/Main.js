@@ -3,13 +3,13 @@ GLOBAL.App = {};
 
 var Client = require('./Client.js');
 var CommandManager = require('./CommandManager.js');
-var sq = require('./songrequests/SongQueue.js');
-var WQ = require('./misc/weather.js');
-var emotes = require('./misc/emotes.js');
+var sq = require('./commands/songrequests/SongQueue.js');
+var WQ = require('./commands/weather.js');
+var emotes = require('./commands/emotes.js');
 var commands = require('./Commands.js');
 
 require('fs').readFile('creds', 'utf8', function (err, data) {
-  App.credentials = data.split('/');
+  App.credentials = JSON.parse(data);
   init();
 });
 

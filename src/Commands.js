@@ -49,6 +49,7 @@ module.exports = function () {
     description: 'Plays random youtube video',
     exec: function (payload) {
       var needle = require('needle');
+      var googleAPI = require('./api/google.js')
       var id = '';
       for (var i = 0; i < 3; i++) {
         if (Math.random() >= 0.33)
@@ -59,7 +60,7 @@ module.exports = function () {
           id += Math.floor(Math.random() * 9);
       }
 
-      var reqUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=v=' + id + '&type=video&key=' + App.credentials[2];
+      var reqUrl = googleAPI.GET_yt_videoSearch(id);
       needle.get(reqUrl, function (err, res) {
         if (!err) {
           var item = res.body.items[Math.floor(Math.random() * res.body.items.length)];
@@ -160,6 +161,18 @@ module.exports = function () {
     }
   };
 
+  var webshot = {
+    keyword: '!webshot',
+    description: 'Uploads screenshot of website',
+    exec: function (payload) {
+      console.log(payload);
+      require('webshot')(payload.parameter, function(err, stream) {
+        if (err) console.log(err);
+        App.botClient.sendFile(payload.raw, stream);
+      });
+    }
+  }
+
   cm.registerCommand(kappa);
   cm.registerCommand(serverlist);
   cm.registerCommand(emote);
@@ -173,4 +186,5 @@ module.exports = function () {
   cm.registerCommand(play);
   cm.registerCommand(exec);
   cm.registerCommand(help);
+  cm.registerCommand(webshot);
 };

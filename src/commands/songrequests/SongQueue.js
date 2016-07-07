@@ -2,6 +2,7 @@ module.exports = function () {
   var Player = require('./Player.js');
   var ytdl = require('ytdl-core');
   var needle = require('needle');
+  var googleAPI = require('../../api/google.js');
   var messageListeners = [];
   var queue = [];
   var currentPlayingSong = null;
@@ -41,7 +42,7 @@ module.exports = function () {
   };
 
   function searchVideo(query) {
-    var reqUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + query + '&type=video&key=' + App.credentials[2];
+    var reqUrl = googleAPI.GET_yt_videoSearch(query);
     needle.get(reqUrl, function (err, res) {
       if (!err) {
         if (res.body.items.length === 0) return;
@@ -53,15 +54,7 @@ module.exports = function () {
   }
 
   function parsePlaylist(playlistUrl) {
-    // you can somehow use needle to pass this object instead of having that long-ass url down there.
-    var options = {
-      part: 'contentDetails',
-      playlistId: playlistUrl.split('=')[1],
-      maxResults: 20,
-      key: App.credentials[2]
-    };
-
-    var reqUrl = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=' + options.playlistId + '&maxResults=50&key=' + options.key;
+    var reqUrl = googleAPI.GET_yt_playlist(playlistUrl.split('=')[1]);
     needle.get(reqUrl, function (err, res) {
       if (!err) {
         var obj = res.body;
