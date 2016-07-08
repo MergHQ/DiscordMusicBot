@@ -165,8 +165,15 @@ module.exports = function () {
     keyword: '!webshot',
     description: 'Uploads screenshot of website',
     exec: function (payload) {
-      console.log(require('webshot')(payload.parameter));
-        App.botClient.sendFile(payload.raw, require('webshot')(payload.parameter));
+      var stream = require('webshot')(payload.parameter);
+      var chunks = [];
+      stream.on('data', function(data) {
+        chunks.push(data);
+      });
+
+      stream.on('end', function() {
+        App.botClient.sendFile(payload.raw, Buffer.concat(chunks));
+      });
     }
   };
 
