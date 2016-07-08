@@ -49,7 +49,7 @@ module.exports = function () {
     description: 'Plays random youtube video',
     exec: function (payload) {
       var needle = require('needle');
-      var googleAPI = require('./api/google.js')
+      var googleAPI = require('./api/google.js');
       var id = '';
       for (var i = 0; i < 3; i++) {
         if (Math.random() >= 0.33)
@@ -165,17 +165,14 @@ module.exports = function () {
     keyword: '!webshot',
     description: 'Uploads screenshot of website',
     exec: function (payload) {
-      console.log(payload);
-      require('webshot')(payload.parameter, function(err, stream) {
-        if (err) console.log(err);
-        App.botClient.sendFile(payload.raw, stream);
-      });
+      console.log(require('webshot')(payload.parameter));
+        App.botClient.sendFile(payload.raw, require('webshot')(payload.parameter));
     }
-  }
+  };
 
   var d2gamerep = {
     keyword: '!d2gamerep',
-    description: 'Shows stats of last dota 2 game. (!d2gamerep steamcommunity.com/id/somename)',
+    description: 'Shows stats of last dota 2 game. (!d2gamerep steamcommunity.com/id/somename/)',
     exec: function (payload) {
       App.D2GameReports.get(payload);
     }
