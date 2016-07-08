@@ -175,7 +175,7 @@ module.exports = function () {
 
   var d2gamerep = {
     keyword: '!d2gamerep',
-    description: 'Shows stats of last dota 2 game.',
+    description: 'Shows stats of last dota 2 game. (!d2gamerep steamcommunity.com/id/somename)',
     exec: function (payload) {
       App.D2GameReports.get(payload);
     }
