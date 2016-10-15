@@ -7,12 +7,9 @@ module.exports = function () {
 
   this.addSong = (obj) => {
     queue.push(obj);
-  };
-
-  setInterval(() => {
-    if (queue.length !== 0)
+    if (queue.length === 1)
       play();
-  }, 100);
+  };
 
   function play() {
     if (self.isPlaying) return;
