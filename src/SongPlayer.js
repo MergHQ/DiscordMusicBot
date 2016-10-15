@@ -2,6 +2,7 @@
 const QueuePlayer = require('./QueuePlayer');
 const needle = require('needle');
 const googleApi = require('./api/google');
+const ytdl = require('ytdl-core');
 module.exports = function () {
   this.voiceConnections = {};
 
