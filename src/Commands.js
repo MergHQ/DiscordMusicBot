@@ -9,10 +9,27 @@ module.exports = function () {
   var play = {
     key: '!play',
     func: (msg) => {
-      App.SongPlayer.addToQue(msg);
+      return App.SongPlayer.addToQue(msg);
+    }
+  };
+
+  var skip = {
+    key: '!skip',
+    func: (msg) => {
+      App.SongPlayer.skip(msg);
+      return '👌';
+    }
+  };
+
+  var reqlist = {
+    key: '!reqlist',
+    func: (msg) => {
+      return App.SongPlayer.getReqlist(msg);
     }
   };
 
   App.CommandManager.registerCommand(ping);
   App.CommandManager.registerCommand(play);
+  App.CommandManager.registerCommand(skip);
+  App.CommandManager.registerCommand(reqlist);
 };

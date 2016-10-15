@@ -1,36 +1,42 @@
 'use strict';
 const ytdl = require('ytdl-core');
 module.exports = function () {
-  var queue = [];
+  this.queue = [];
   var self = this;
+  this.voiceConnection = null;
   this.isPlaying = false;
 
   this.addSong = (obj) => {
-    queue.push(obj);
-    if (queue.length === 1)
+    this.queue.push(obj);
+    if (this.queue.length === 1)
       play();
+  };
+
+  this.skip = () => {
+    this.voiceConnection.stopPlaying();
   };
 
   function play() {
     if (self.isPlaying) return;
-    var current = queue.shift();
+    var current = self.queue.shift();
     var connection = App.Client.voiceConnections.find(c => c.channelID === current.voiceChannelId);
     if (!connection) {
       App.Client.joinVoiceChannel(current.voiceChannelId).then(con => {
         self.isPlaying = true;
-        con.play(ytdl(current.url, { audioonly: true }));
+        self.voiceConnection = con;
+        con.play(ytdl(current.data.url, { audioonly: true }));
         con.on('end', () => {
           self.isPlaying = false;
-          if (queue.length !== 0)
+          if (self.queue.length !== 0)
             play();
         });
       });
     } else {
       self.isPlaying = true;
-      connection.play(ytdl(current.url, { audioonly: true }));
+      connection.play(ytdl(current.data.url, { audioonly: true }));
       connection.on('end', () => {
         self.isPlaying = false;
-        if (queue.length !== 0)
+        if (self.queue.length !== 0)
           play();
       });
     }

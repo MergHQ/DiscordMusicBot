@@ -3,9 +3,10 @@
   "description": "Discord bot for TINT",
   "author": "Hugo Holmqvist",
   "version": "1.0.0",
-  "main": "pathToMain",
+  "main": "./app.js",
   "dependencies": {
     "eris":"0.4.0",
-    "needle":"1.1.2"
+    "needle":"1.1.2",
+    "ytdl-core":"0.7.18"
   }
 }
