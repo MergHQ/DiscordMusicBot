@@ -1,0 +1,11 @@
+{
+  "name": "Nyu",
+  "description": "Discord bot for TINT",
+  "author": "Hugo Holmqvist",
+  "version": "1.0.0",
+  "main": "pathToMain",
+  "dependencies": {
+    "eris":"0.4.0",
+    "needle":"1.1.2"
+  }
+}
