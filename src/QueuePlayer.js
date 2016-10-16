@@ -22,11 +22,16 @@ module.exports = function () {
     App.Client.joinVoiceChannel(current.voiceChannelId).then(con => {
       self.isPlaying = true;
       self.voiceConnection = con;
-      con.play(ytdl(current.data.url, { audioonly: true }));
+      con.play(ytdl(current.data.url, {audioonly: true}));
       con.on('end', () => {
         self.isPlaying = false;
         if (self.queue.length !== 0)
           play();
+      });
+      con.on('error', () => {
+        self.isPlaying = false;
+        if (self.queue.length !== 0)
+          play();       
       });
     });
   }
