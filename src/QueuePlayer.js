@@ -8,12 +8,13 @@ module.exports = function () {
 
   this.addSong = (obj) => {
     this.queue.push(obj);
-    if (this.queue.length === 1)
-      play();
+    if (this.queue.length === 1 && !this.isPlaying)
+        play();
   };
 
   this.skip = () => {
-    this.voiceConnection.stopPlaying();
+    if (this.voiceConnection)
+      this.voiceConnection.stopPlaying();
   };
 
   function play() {
