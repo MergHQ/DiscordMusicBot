@@ -44,7 +44,10 @@ module.exports = function () {
   function resolveSong(param, cb) {
     if (param.indexOf('https') > -1 || param.indexOf('http') > -1) {
       ytdl.getInfo(param, (err, info) => {
-        cb({title: info.title, url: param});
+        if (info)
+          cb({title: info.title, url: param});
+        else
+          cb({title: 'undefined', url: param});
       });
     } else {
       needle.get(googleApi.GET_yt_videoSearch(param), (err, res) => {
