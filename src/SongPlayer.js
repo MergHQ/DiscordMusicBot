@@ -43,12 +43,16 @@ module.exports = function () {
 
   function resolveSong(param, cb) {
     if (param.indexOf('https') > -1 || param.indexOf('http') > -1) {
-      ytdl.getInfo(param, (err, info) => {
-        if (info)
-          cb({title: info.title, url: param});
-        else
-          cb({title: 'undefined', url: param});
-      });
+      try {
+        ytdl.getInfo(param, (err, info) => {
+          if (info)
+            cb({title: info.title, url: param});
+          else
+            cb({title: 'undefined', url: param});
+        });
+      } catch (e) {
+        cb({title: 'undefined', url: param}); 
+      }
     } else {
       needle.get(googleApi.GET_yt_videoSearch(param), (err, res) => {
         if (err) return;
