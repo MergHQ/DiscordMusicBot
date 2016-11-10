@@ -1,3 +1,5 @@
+const webShot = require('webshot');
+
 module.exports = function () {
   var ping = {
     key: '!ping',
@@ -28,8 +30,24 @@ module.exports = function () {
     }
   };
 
+  var webshot = {
+    key: '!webshot',
+    func: msg => {
+      var stream = webShot(msg.args);
+      var chunks = [];
+      stream.on('data', function (data) {
+        chunks.push(data);
+      });
+
+      stream.on('end', function () {
+        App.Client.createMessage(msg.channel.id, "Here:", {file: Buffer.concat(chunks), name: 'webshot.png'});
+      });
+    }
+  };
+
   App.CommandManager.registerCommand(ping);
   App.CommandManager.registerCommand(play);
   App.CommandManager.registerCommand(skip);
   App.CommandManager.registerCommand(reqlist);
+  App.CommandManager.registerCommand(webshot);
 };

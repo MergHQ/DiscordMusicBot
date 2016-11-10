@@ -7,6 +7,7 @@
   "dependencies": {
     "eris":"0.4.0",
     "needle":"1.1.2",
-    "ytdl-core":"0.7.18"
+    "ytdl-core":"0.7.18",
+    "webshot": "0.18.0"
   }
 }
