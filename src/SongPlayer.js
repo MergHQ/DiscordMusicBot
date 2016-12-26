@@ -53,7 +53,7 @@ module.exports = function () {
     if (param.indexOf('https') > -1 || param.indexOf('http') > -1) {
       if (param.indexOf('playlist') > -1) {
         needle.get(googleApi.GET_yt_playlist(param.split('=')[1]), (err, res) => {
-          if (err || res.statusCode !== 200)
+          if (err || res.statusCode != 200)
             return;
           let items = res.body.items;
           let sortedItems = items.map(v => {
