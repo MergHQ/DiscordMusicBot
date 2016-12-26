@@ -26,11 +26,13 @@ module.exports = function () {
     App.Client.joinVoiceChannel(current.voiceChannelId).then(con => {
       self.isPlaying = true;
       self.voiceConnection = con;
-      try {
-        con.play(ytdl(current.data.url, {audioonly: true}));
-      } catch (e) {
-        
-      }
+      let stream = ytdl(current.data.url, {audioonly: true});
+      stream.on('error', e => {
+        self.isPlaying = false;
+        if (self.queue.length !== 0)
+          play(); 
+      });
+      con.play(stream);
       con.on('end', () => {
         self.isPlaying = false;
         if (self.queue.length !== 0)
