@@ -7,8 +7,11 @@ module.exports = function () {
   this.isPlaying = false;
 
   this.addSong = (obj) => {
-    this.queue.push(obj);
-    if (this.queue.length === 1 && !this.isPlaying)
+    if (obj.data instanceof Array) {
+      for (let item of obj.data) 
+        self.queue.push({data: item, voiceChannelId: obj.voiceChannelId});
+    } else self.queue.push(obj);
+    if (self.queue.length >= 1 && !self.isPlaying)
         play();
   };
 
