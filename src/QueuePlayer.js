@@ -23,19 +23,23 @@ module.exports = function () {
   function play() {
     if (self.isPlaying) return;
     var current = self.queue.shift();
+    self.isPlaying = true;
+    if (self.voiceConnection) {
+      self.voiceConnection.play(ytdl(current.data.url, {audioonly: true}));
+      return;
+    }
     App.Client.joinVoiceChannel(current.voiceChannelId).then(con => {
-      self.isPlaying = true;
       self.voiceConnection = con;
       let stream = ytdl(current.data.url, {audioonly: true});
       stream.on('error', e => {
         self.isPlaying = false;
-        if (self.queue.length !== 0)
+        if (!self.isPlaying && self.queue.length !== 0)
           play(); 
       });
       con.play(stream);
       con.on('end', () => {
         self.isPlaying = false;
-        if (self.queue.length !== 0)
+        if (!self.isPlaying && self.queue.length !== 0)
           play();
       });
       con.on('error', () => {
